@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 
 import styles from "./event-item.module.css";
@@ -21,7 +22,10 @@ function EventItem(props) {
 
   return (
     <li className={styles.item}>
-      <img src={"/" + image} alt={id} />
+      {/* Next.js는 이미지 최적화 기능을 제공한다 */}
+      {/* width, height는 fetch할 때의 크기를 정하는 것이고, 결국 CSS가 관여한다는 것을 잊지말자. 따라서 선명하지 않다면 width, height 속성을 키워보면서 맞춰가면 된다. */}
+      <Image src={"/" + image} alt={id} width={250} height={160} />
+      {/* <img src={"/" + image} alt={id} /> */}
 
       <div className={styles.content}>
         <div className={styles.summary}>
