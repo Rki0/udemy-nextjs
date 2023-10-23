@@ -1,37 +1,59 @@
-import Head from "next/head";
+import { useRef, useState } from "react";
 
-import EventList from "@/components/events/event-list";
-import { getFeaturedEvents } from "@/helpers/api-utils";
+function HomePage() {
+  const [feedbackItems, setFeedbackItems] = useState([]);
+  const emailInputRef = useRef();
+  const feedbackInputRef = useRef();
 
-function HomePage(props) {
-  const { featuredEvents } = props;
+  const submitHandler = async (e) => {
+    e.preventDefault();
+
+    const response = await fetch("/api/feedback", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        email: emailInputRef.current.value,
+        text: feedbackInputRef.current.value,
+      }),
+    });
+    const data = await response.json();
+    console.log(data);
+  };
+
+  const loadFeedbackHandler = async () => {
+    const response = await fetch("/api/feedback");
+    const data = await response.json();
+    setFeedbackItems(data.feedback);
+  };
 
   return (
     <div>
-      <Head>
-        <title>NextJs Events</title>
-        <meta
-          name="description"
-          content="Find a lot of great events that allow you to evolve"
-        />
-      </Head>
+      <h1>Home page</h1>
+      <form onSubmit={submitHandler}>
+        <div>
+          <label htmlFor="email">Your Email Address</label>
+          <input type="email" id="email" ref={emailInputRef} />
+        </div>
 
-      <EventList items={featuredEvents} />
+        <div>
+          <label htmlFor="feedback">Your Feedback</label>
+          <textarea id="feedback" rows="5" ref={feedbackInputRef} />
+        </div>
+
+        <button type="submit">Send Feedback</button>
+      </form>
+
+      <button onClick={loadFeedbackHandler}>Load Feedback</button>
+
+      <ul>
+        {feedbackItems.map((item) => (
+          <li key={item.id}>{item.feedback}</li>
+        ))}
+      </ul>
     </div>
   );
-}
-
-// SEO가 중요한 페이지이다. 로그인이 필요한 페이지가 이니다. 모든 요청에 대해 재실행할 필요가 없다.
-// 따라서 getStaticProps() 사용.
-export async function getStaticProps() {
-  const featuredEvents = await getFeaturedEvents();
-
-  return {
-    props: {
-      featuredEvents,
-    },
-    revalidate: 1800, // 이를 추가하지 않으면 페이지를 다시 build해서 배포해야 업데이트된 상태를 얻을 수 있게된다. 30분에 한번씩 regenerate한다.
-  };
 }
 
 export default HomePage;
