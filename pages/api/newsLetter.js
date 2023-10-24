@@ -27,7 +27,7 @@ async function handler(req, res) {
         .json({ message: "Inserting data to the database failed!" });
     }
 
-    client.close();
+    // client.close();
 
     return res.status(201).json({ message: "Signed up!" });
   }
