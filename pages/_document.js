@@ -5,11 +5,11 @@ class MyDocument extends Document {
     return (
       <Html lang="en">
         <Head />
+
         <body>
-          {/* React의 portal 같은 느낌 */}
-          <div id="overlays" />
           <Main />
           <NextScript />
+          <div id="notifications"></div>
         </body>
       </Html>
     );

@@ -1,37 +1,31 @@
+import FeaturedPosts from "@/components/home-page/featured-posts";
+import Hero from "@/components/home-page/hero";
+import { getFeaturedPosts } from "@/lib/posts-util";
 import Head from "next/head";
 
-import EventList from "@/components/events/event-list";
-import { getFeaturedEvents } from "@/helpers/api-utils";
-import NewsletterRegistration from "@/components/input/newsletter-registration";
-
 function HomePage(props) {
-  const { featuredEvents } = props;
-
   return (
-    <div>
+    <>
       <Head>
-        <title>NextJs Events</title>
+        <title>Rki0's Blog</title>
         <meta
           name="description"
-          content="Find a lot of great events that allow you to evolve"
+          content="I post about programming and web development"
         />
       </Head>
-      <NewsletterRegistration />
-      <EventList items={featuredEvents} />
-    </div>
+      <Hero />
+      <FeaturedPosts posts={props.posts} />
+    </>
   );
 }
 
-// SEO가 중요한 페이지이다. 로그인이 필요한 페이지가 이니다. 모든 요청에 대해 재실행할 필요가 없다.
-// 따라서 getStaticProps() 사용.
 export async function getStaticProps() {
-  const featuredEvents = await getFeaturedEvents();
+  const featuredPosts = getFeaturedPosts();
 
   return {
     props: {
-      featuredEvents,
+      posts: featuredPosts,
     },
-    revalidate: 1800, // 이를 추가하지 않으면 페이지를 다시 build해서 배포해야 업데이트된 상태를 얻을 수 있게된다. 30분에 한번씩 regenerate한다.
   };
 }
 
