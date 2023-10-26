@@ -1,14 +1,15 @@
-import Layout from "@/components/layout/layout";
-import "@/styles/globals.css";
-import Head from "next/head";
+import { Provider } from "next-auth/client";
+import Layout from "../components/layout/layout";
+import "../styles/globals.css";
 
-export default function App({ Component, pageProps }) {
+function MyApp({ Component, pageProps }) {
   return (
-    <Layout>
-      <Head>
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-      </Head>
-      <Component {...pageProps} />
-    </Layout>
+    <Provider session={pageProps.sesion}>
+      <Layout>
+        <Component {...pageProps} />
+      </Layout>
+    </Provider>
   );
 }
+
+export default MyApp;
