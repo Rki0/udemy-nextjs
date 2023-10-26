@@ -1,5 +1,15 @@
-import '@/styles/globals.css'
+import { Provider } from "next-auth/client";
+import Layout from "../components/layout/layout";
+import "../styles/globals.css";
 
-export default function App({ Component, pageProps }) {
-  return <Component {...pageProps} />
+function MyApp({ Component, pageProps }) {
+  return (
+    <Provider session={pageProps.sesion}>
+      <Layout>
+        <Component {...pageProps} />
+      </Layout>
+    </Provider>
+  );
 }
+
+export default MyApp;
